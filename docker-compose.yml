@@ -4,11 +4,13 @@ services:
     build: .
     container_name: dog-backend
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Для доступа с хоста (опционально)
     env_file:
       - .env_example
     depends_on:
       - database
+    networks:  # Добавлено!
+      - app-network
 
   database:
     image: postgres:15
@@ -16,4 +18,26 @@ services:
     env_file:
       - .env_example
     ports:
-      - "5432:5432"
+      - "5432:5432"  # Для доступа с хоста (опционально)
+    networks:  # Добавлено!
+      - app-network
+    volumes:  # Чтобы данные БД сохранялись
+      - postgres_data:/var/lib/postgresql/data
+
+  nginx:  # Новый сервис!
+    image: nginx:1.26.3
+    container_name: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - dog-backend
+    networks:
+      - app-network
+
+networks:  # Общая сеть
+  app-network:
+
+volumes:  # Для хранения данных БД
+  postgres_data:
