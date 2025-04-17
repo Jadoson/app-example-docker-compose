@@ -4,12 +4,12 @@ services:
     build: .
     container_name: dog-backend
     ports:
-      - "8000:8000"  # Для доступа с хоста (опционально)
+      - "8000:8000"
     env_file:
       - .env_example
     depends_on:
       - database
-    networks:  # Добавлено!
+    networks:
       - app-network
 
   database:
@@ -18,13 +18,14 @@ services:
     env_file:
       - .env_example
     ports:
-      - "5432:5432"  # Для доступа с хоста (опционально)
-    networks:  # Добавлено!
+      - "5432:5432"
+    networks:
       - app-network
-    volumes:  # Чтобы данные БД сохранялись
-      - postgres_data:/var/lib/postgresql/data
+    # Исправлено объявление тома:
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Ссылка на том, объявленный в корне
 
-  nginx:  # Новый сервис!
+  nginx:
     image: nginx:1.26.3
     container_name: nginx
     ports:
@@ -36,8 +37,9 @@ services:
     networks:
       - app-network
 
-networks:  # Общая сеть
+# Объявляем тома и сети на верхнем уровне:
+networks:
   app-network:
 
-volumes:  # Для хранения данных БД
-  postgres_data:
+volumes:
+  postgres_data:  # Том объявлен здесь
