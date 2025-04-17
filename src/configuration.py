@@ -1,18 +1,15 @@
-from typing import Optional
-
-from pydantic import Field
+from pydantic import PostgresDsn
 from pydantic_settings import BaseSettings
 
-
 class AppSettings(BaseSettings):
-    database_url: Optional[str] = Field('postgresql+asyncpg://myuser:mypassword@database:5432/mydatabase')
-    postgres_user: Optional[str] = Field('myuser')
-    postgres_password: Optional[str] = Field('mypassword')
-    postgres_db: Optional[str] = Field('mydatabase')
+    POSTGRES_USER: str
+    POSTGRES_PASSWORD: str
+    POSTGRES_DB: str
+    POSTGRES_HOST: str
+    POSTGRES_PORT: str
 
-    class Config:
-        env_file = "../.env_example"
-        env_file_encoding = "utf-8"
-
+    @property
+    def database_url(self) -> PostgresDsn:
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
 appsettings = AppSettings()
