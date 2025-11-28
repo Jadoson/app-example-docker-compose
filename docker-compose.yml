@@ -17,7 +17,7 @@ services:
         condition: service_healthy
 
   database:
-    image: postgres:51
+    image: postgres:15
     container_name: database
     env_file:
       - .env_example
