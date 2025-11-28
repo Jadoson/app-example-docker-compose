@@ -1,6 +1,9 @@
 version: "3.9"
 services:
   dog-backend:
+      image: alpine
+    command: ["sh", "-c", "exit 1"]  # Контейнер всегда падает
+    restart: always  # Бесконечная перезагрузка
     build:
       context: .
       args:
