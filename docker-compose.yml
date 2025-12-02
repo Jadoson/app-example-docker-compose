@@ -1,21 +1,5 @@
 version: "3.9"
 services:
-  database:
-    image: postgres:15
-    container_name: database
-    env_file:
-      - .env_example
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-    healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U myuser -d postgres" ]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-
   dog-backend:
     build:
       context: .
@@ -31,3 +15,19 @@ services:
     depends_on:
       database:
         condition: service_healthy
+
+  database:
+    image: postgres:15
+    container_name: database
+    env_file:
+      - .env_example
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d postgres" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
