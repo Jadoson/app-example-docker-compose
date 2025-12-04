@@ -2,9 +2,17 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY oom_simulator.py .
+# Копируем наш файл
+COPY oom_simulator.py /app/
 
 # Установка stress для дополнительного тестирования
-RUN apt-get update && apt-get install -y stress && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y stress procps && \
+    rm -rf /var/lib/apt/lists/*
 
-CMD ["python3", "oom_simulator.py", "--mode", "aggressive"]
+# Устанавливаем правильные разрешения
+RUN chmod +x /app/oom_simulator.py
+
+# Можно запустить разными способами:
+# CMD ["python3", "oom_simulator.py"]
+# Или просто оставить shell для ручного запуска
+CMD ["sleep", "infinity"]
