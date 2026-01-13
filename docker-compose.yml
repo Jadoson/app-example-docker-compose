@@ -4,6 +4,6 @@ services:
   directus:
     image: directus/directus:latest
     ports:
-      - ${DIRECTUS_PORT}:80
+      - "8000:8000"
     environment:
       - DIRECTUS_SECRET_KEY=my_secret_key
